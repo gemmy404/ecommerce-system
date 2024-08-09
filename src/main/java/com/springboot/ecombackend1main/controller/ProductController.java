@@ -27,7 +27,7 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    ProductMapper productMapper;
+    private ProductMapper productMapper;
 
     @GetMapping("/products")
     @Operation(summary = "Display all products in home page")
