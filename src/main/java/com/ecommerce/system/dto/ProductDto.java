@@ -1,4 +1,4 @@
-package com.springboot.ecombackend1main.dto;
+package com.ecommerce.system.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,9 +1,9 @@
-package com.springboot.ecombackend1main.controller;
+package com.ecommerce.system.controller;
 
-import com.springboot.ecombackend1main.dto.ProductDto;
-import com.springboot.ecombackend1main.mapper.ProductMapper;
-import com.springboot.ecombackend1main.model.Product;
-import com.springboot.ecombackend1main.service.ProductService;
+import com.ecommerce.system.dto.ProductDto;
+import com.ecommerce.system.mapper.ProductMapper;
+import com.ecommerce.system.model.Product;
+import com.ecommerce.system.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

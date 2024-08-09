@@ -1,8 +1,8 @@
-package com.springboot.ecombackend1main.service.impl;
+package com.ecommerce.system.service.impl;
 
-import com.springboot.ecombackend1main.model.Product;
-import com.springboot.ecombackend1main.repository.ProductRepo;
-import com.springboot.ecombackend1main.service.ProductService;
+import com.ecommerce.system.model.Product;
+import com.ecommerce.system.service.ProductService;
+import com.ecommerce.system.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

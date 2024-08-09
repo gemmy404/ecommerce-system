@@ -1,4 +1,4 @@
-package com.springboot.ecombackend1main.model;
+package com.ecommerce.system.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

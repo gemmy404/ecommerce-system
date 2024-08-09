@@ -1,4 +1,4 @@
-package com.springboot.ecombackend1main.aspect;
+package com.ecommerce.system.aspect;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;

@@ -1,4 +1,4 @@
-package com.springboot.ecombackend1main.config;
+package com.ecommerce.system.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

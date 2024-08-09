@@ -1,13 +1,13 @@
-package com.springboot.ecombackend1main;
+package com.ecommerce.system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EcomBackend1MainApplication {
+public class EcommerceApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(EcomBackend1MainApplication.class, args);
+        SpringApplication.run(EcommerceApp.class, args);
     }
 
 }
