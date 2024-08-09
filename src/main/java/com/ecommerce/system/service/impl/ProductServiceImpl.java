@@ -95,6 +95,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(key = "#keyword", value = "searchForProduct")
     public List<Product> searchProduct(String keyword) {
         ProductSpec productSpec = new ProductSpec(keyword);
         return productRepo.findAll(productSpec);
