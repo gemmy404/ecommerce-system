@@ -3,12 +3,17 @@ package com.ecommerce.system.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Setter
 @Getter
-public class ProductDto {
+public class ProductDto implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private int id;
     private String name;
     private String description;
