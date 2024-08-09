@@ -64,5 +64,11 @@ public class ProductController {
             return ResponseEntity.ok().contentType(MediaType.valueOf(productDto.getImageType()))
                     .body(productDto.getImageDate());
     }
+
+    @GetMapping("/products/search")
+    @Operation(summary = "Search for product by name, brand, description or category")
+    public ResponseEntity<?> getProductSearch(@RequestParam String keyword) {
+        return ResponseEntity.ok(productService.searchProduct(keyword));
+    }
     
 }

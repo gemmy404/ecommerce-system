@@ -20,4 +20,6 @@ public interface ProductService {
 
     void delete(int id);
 
+    List<Product> searchProduct(String keyword);
+
 }

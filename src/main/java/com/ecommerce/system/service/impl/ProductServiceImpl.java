@@ -3,6 +3,7 @@ package com.ecommerce.system.service.impl;
 import com.ecommerce.system.dto.ProductDto;
 import com.ecommerce.system.mapper.ProductMapper;
 import com.ecommerce.system.model.Product;
+import com.ecommerce.system.repository.ProductSpec;
 import com.ecommerce.system.service.ProductService;
 import com.ecommerce.system.repository.ProductRepo;
 import lombok.extern.log4j.Log4j2;
@@ -91,6 +92,12 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product = productRepo.findById(id);
         if (product.isPresent())
             productRepo.deleteById(id);
+    }
+
+    @Override
+    public List<Product> searchProduct(String keyword) {
+        ProductSpec productSpec = new ProductSpec(keyword);
+        return productRepo.findAll(productSpec);
     }
 
 }
