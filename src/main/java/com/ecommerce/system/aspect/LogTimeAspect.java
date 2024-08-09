@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogTimeAspect {
 
-    @Around(value = "execution(* com.springboot.ecombackend1main.controller..*(..))")
+    @Around(value = "execution(* com.ecommerce.system.controller..*(..))")
     public Object logTime(final ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         StringBuilder kpi = new StringBuilder("KPI: ");
