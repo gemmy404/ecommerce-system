@@ -22,7 +22,7 @@ public class MultiConfig {
 
     @Bean
     public GroupedOpenApi setUpGroupedOpenApi() {
-        String packages =  "com.springboot.ecombackend1main.controller";
+        String packages =  "com.ecommerce.system.controller";
         return GroupedOpenApi.builder().group("Product API").packagesToScan(packages).build();
     }
 }
