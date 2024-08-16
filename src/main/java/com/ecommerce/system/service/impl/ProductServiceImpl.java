@@ -6,8 +6,8 @@ import com.ecommerce.system.model.Product;
 import com.ecommerce.system.repository.ProductSpec;
 import com.ecommerce.system.service.ProductService;
 import com.ecommerce.system.repository.ProductRepo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -20,13 +20,12 @@ import java.util.Optional;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepo productRepo;
+    private final ProductRepo productRepo;
 
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
     @Override
     @Cacheable(key = "#root.methodName", value = "findAllProducts")

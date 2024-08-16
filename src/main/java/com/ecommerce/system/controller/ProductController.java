@@ -5,7 +5,7 @@ import com.ecommerce.system.model.Product;
 import com.ecommerce.system.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,11 @@ import java.io.IOException;
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
+@RequiredArgsConstructor
 @Tag(name = "Product Management", description = "Operations related to product management")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     @GetMapping("/products")
     @Operation(summary = "Display all products in home page")
