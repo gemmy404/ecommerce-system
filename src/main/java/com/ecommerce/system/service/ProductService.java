@@ -12,14 +12,14 @@ public interface ProductService {
 
     ProductDto findById(int id);
 
-    ProductDto insert(Product product, MultipartFile imageFile) throws IOException;
+    ProductDto insert(ProductDto productDto, MultipartFile imageFile) throws IOException;
 
     ProductDto getProductImage(int productId);
 
-    ProductDto update(int id, Product product, MultipartFile imageFile) throws IOException;
+    ProductDto update(int id, ProductDto productDto, MultipartFile imageFile) throws IOException;
 
     void delete(int id);
 
-    List<Product> searchProduct(String keyword);
+    List<ProductDto> searchProduct(String keyword);
 
 }

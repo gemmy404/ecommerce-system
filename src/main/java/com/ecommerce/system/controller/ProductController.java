@@ -37,32 +37,33 @@ public class ProductController {
 
     @PostMapping("/product")
     @Operation(summary = "Add new product")
-    public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile)
+    public ResponseEntity<?> addProduct(@RequestPart ProductDto product, @RequestPart MultipartFile imageFile)
             throws IOException {
-        return new ResponseEntity<>(productService.insert(product, imageFile), HttpStatus.CREATED);
+        return new ResponseEntity<>(productService.insert(product, imageFile),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/product/{id}")
     @Operation(summary = "Update product")
-    public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestPart Product product,
+    public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestPart ProductDto product,
                                            @RequestPart MultipartFile imageFile) throws IOException {
-        ProductDto productDto = productService.update(id, product, imageFile);
-        return new ResponseEntity<>(productDto, HttpStatus.OK);
+        return new ResponseEntity<>(productService.update(id, product, imageFile),
+                HttpStatus.OK);
     }
 
     @DeleteMapping("/product/{id}")
     @Operation(summary = "Delete product")
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
-         productService.delete(id);
-         return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        productService.delete(id);
+        return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
 
     @GetMapping("product/{productId}/image")
     @Operation(summary = "Fetch image to product")
     public ResponseEntity<?> getProductImage(@PathVariable int productId) {
         ProductDto productDto = productService.getProductImage(productId);
-            return ResponseEntity.ok().contentType(MediaType.valueOf(productDto.getImageType()))
-                    .body(productDto.getImageDate());
+        return ResponseEntity.ok().contentType(MediaType.valueOf(productDto.getImageType()))
+                .body(productDto.getImageDate());
     }
 
     @GetMapping("/products/search")
@@ -70,5 +71,5 @@ public class ProductController {
     public ResponseEntity<?> getProductSearch(@RequestParam String keyword) {
         return ResponseEntity.ok(productService.searchProduct(keyword));
     }
-    
+
 }

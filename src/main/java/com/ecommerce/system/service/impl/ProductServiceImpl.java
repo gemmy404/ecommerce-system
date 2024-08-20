@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -30,13 +30,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Cacheable(key = "#root.methodName", value = "findAllProducts")
     public List<ProductDto> findAll() {
-        List<Product> products = productRepo.findAll();
-        List<ProductDto> productDtos = new ArrayList<>();
-        for (Product product : products) {
-            ProductDto productDto = productMapper.map(product);
-            productDtos.add(productDto);
-        }
-        return productDtos;
+        return productRepo.findAll().stream()
+                .map(productMapper::map)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,16 +47,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @CacheEvict(key = "#root.methodName", value = {"findAllProducts", "findProductById"}, allEntries = true)
-    public ProductDto insert(Product product, MultipartFile imageFile) {
-//        Product product = productMapper.unMap(productDto);
+    public ProductDto insert(ProductDto productDto, MultipartFile imageFile) {
         try {
-            product.setImageName(imageFile.getOriginalFilename());
-            product.setImageType(imageFile.getContentType());
-            product.setImageDate(imageFile.getBytes());
+            productDto.setImageName(imageFile.getOriginalFilename());
+            productDto.setImageType(imageFile.getContentType());
+            productDto.setImageDate(imageFile.getBytes());
         } catch (IOException e) {
             log.info(e.getMessage());
         }
-        return productMapper.map(productRepo.save(product));
+        productRepo.save(productMapper.unMap(productDto));
+        return productDto;
     }
 
     @Override
@@ -72,17 +68,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @CacheEvict(key = "#root.methodName", value = {"findAllProducts", "findProductById"}, allEntries = true)
-    public ProductDto update(int id, Product product, MultipartFile imageFile) throws IOException {
+    public ProductDto update(int id, ProductDto productDto, MultipartFile imageFile) throws IOException {
         try {
             if (productRepo.findById(id).isPresent()) {
-                product.setImageName(imageFile.getOriginalFilename());
-                product.setImageType(imageFile.getContentType());
-                product.setImageDate(imageFile.getBytes());
+                productDto.setImageName(imageFile.getOriginalFilename());
+                productDto.setImageType(imageFile.getContentType());
+                productDto.setImageDate(imageFile.getBytes());
             }
         } catch (IOException e) {
             log.info(e.getMessage());
         }
-        return productMapper.map(productRepo.save(product));
+        productRepo.save(productMapper.unMap(productDto));
+        return productDto;
     }
 
     @Override
@@ -95,9 +92,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Cacheable(key = "#keyword", value = "searchForProduct")
-    public List<Product> searchProduct(String keyword) {
+    public List<ProductDto> searchProduct(String keyword) {
         ProductSpec productSpec = new ProductSpec(keyword);
-        return productRepo.findAll(productSpec);
+        return productRepo.findAll(productSpec).stream()
+                .map(productMapper::map)
+                .collect(Collectors.toList());
     }
 
 }
