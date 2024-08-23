@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +29,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
 
+    private final MessageSource messageSource;
+
     @Override
     @Cacheable(key = "#root.methodName", value = "findAllProducts")
     public List<ProductDto> findAll() {
@@ -41,8 +45,12 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product = productRepo.findById(id);
         if (product.isPresent())
             return productMapper.map(product.get());
-        else
-            throw new RuntimeException("Product Not Found");
+        else {
+            String[] msgParams = {String.valueOf(id)};
+            String msg = messageSource.getMessage("exception.recordNotFound.occurred", msgParams,
+                    LocaleContextHolder.getLocale());
+            throw new RuntimeException(msg);
+        }
     }
 
     @Override
@@ -74,6 +82,11 @@ public class ProductServiceImpl implements ProductService {
                 productDto.setImageName(imageFile.getOriginalFilename());
                 productDto.setImageType(imageFile.getContentType());
                 productDto.setImageDate(imageFile.getBytes());
+            } else {
+                String[] msgParams = {String.valueOf(id)};
+                String msg = messageSource.getMessage("exception.recordNotFound.occurred", msgParams,
+                        LocaleContextHolder.getLocale());
+                throw new RuntimeException(msg);
             }
         } catch (IOException e) {
             log.info(e.getMessage());
@@ -88,6 +101,12 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product = productRepo.findById(id);
         if (product.isPresent())
             productRepo.deleteById(id);
+        else {
+            String[] msgParams = {String.valueOf(id)};
+            String msg = messageSource.getMessage("exception.recordNotFound.occurred", msgParams,
+                    LocaleContextHolder.getLocale());
+            throw new RuntimeException(msg);
+        }
     }
 
     @Override
