@@ -1,0 +1,4 @@
+CREATE TABLE categories (
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(35)
+) ENGINE=InnoDB;
