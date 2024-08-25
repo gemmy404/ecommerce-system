@@ -11,21 +11,31 @@ import java.util.Date;
 @Setter
 @Getter
 public class ProductDto implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private int id;
+    private Integer id;
+
     private String name;
+
     private String description;
+
     private String brand;
+
     private BigDecimal price;
-    private String category;
+
+    private int categoryId;
 
     private Date releaseDate;
+
     private boolean productAvailable;
+
     private int stockQuantity;
 
     private String imageName;
+
     private String imageType;
-    private byte[] imageDate;
+
+    private byte[] imageData;
 }
