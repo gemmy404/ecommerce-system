@@ -1,7 +1,6 @@
 package com.ecommerce.system.controller;
 
 import com.ecommerce.system.dto.ProductDto;
-import com.ecommerce.system.model.Product;
 import com.ecommerce.system.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,26 +15,26 @@ import java.io.IOException;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 @Tag(name = "Product Management", description = "Operations related to product management")
 public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/products")
+    @GetMapping
     @Operation(summary = "Display all products in home page")
-    public ResponseEntity<?> getAllProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<?> getAllProducts(@RequestParam int pageNum, @RequestParam int size) {
+        return ResponseEntity.ok(productService.findAll(pageNum, size));
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Display one product info")
     public ResponseEntity<?> getProduct(@PathVariable int id) {
         return ResponseEntity.ok(productService.findById(id));
     }
 
-    @PostMapping("/product")
+    @PostMapping
     @Operation(summary = "Add new product")
     public ResponseEntity<?> addProduct(@RequestPart ProductDto product, @RequestPart MultipartFile imageFile)
             throws IOException {
@@ -43,7 +42,7 @@ public class ProductController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Update product")
     public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestPart ProductDto product,
                                            @RequestPart MultipartFile imageFile) throws IOException {
@@ -51,25 +50,33 @@ public class ProductController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Delete product")
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
         productService.delete(id);
         return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
 
-    @GetMapping("product/{productId}/image")
+    @GetMapping("/{productId}/image")
     @Operation(summary = "Fetch image to product")
     public ResponseEntity<?> getProductImage(@PathVariable int productId) {
         ProductDto productDto = productService.getProductImage(productId);
         return ResponseEntity.ok().contentType(MediaType.valueOf(productDto.getImageType()))
-                .body(productDto.getImageDate());
+                .body(productDto.getImageData());
     }
 
-    @GetMapping("/products/search")
+    @GetMapping("/search")
     @Operation(summary = "Search for product by name, brand, description or category")
-    public ResponseEntity<?> getProductSearch(@RequestParam String keyword) {
-        return ResponseEntity.ok(productService.searchProduct(keyword));
+    public ResponseEntity<?> getProductSearch(@RequestParam String keyword, @RequestParam int pageNum,
+                                              @RequestParam int size) {
+        return ResponseEntity.ok(productService.searchProduct(keyword, pageNum, size));
+    }
+
+    @GetMapping("/category")
+    @Operation(summary = "Get products by category id")
+    public ResponseEntity<?> getProductByCategoryId(@RequestParam int categoryId, @RequestParam int pageNum,
+                                                    @RequestParam int size) {
+        return ResponseEntity.ok(productService.getProductByCategoryId(categoryId, pageNum, size));
     }
 
 }

@@ -2,8 +2,9 @@ package com.ecommerce.system.service.impl;
 
 import com.ecommerce.system.dto.ProductDto;
 import com.ecommerce.system.mapper.ProductMapper;
+import com.ecommerce.system.model.Category;
 import com.ecommerce.system.model.Product;
-import com.ecommerce.system.repository.ProductSpec;
+import com.ecommerce.system.repository.specification.ProductSpec;
 import com.ecommerce.system.service.ProductService;
 import com.ecommerce.system.repository.ProductRepo;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,20 +37,22 @@ public class ProductServiceImpl implements ProductService {
     private final MessageSource messageSource;
 
     @Override
-    @Cacheable(key = "#root.methodName", value = "findAllProducts")
-    public List<ProductDto> findAll() {
-        return productRepo.findAll().stream()
-                .map(productMapper::map)
-                .collect(Collectors.toList());
+    @Cacheable(key = "{#root.methodName, #pageNum, #size}", value = "findAllProducts")
+    public Page<ProductDto> findAll(int pageNum, int size) {
+        Pageable pageable = PageRequest.of(pageNum, size);
+        Page<Product> products = productRepo.findAll(pageable);
+        return products.map(productMapper::toProductDto);
     }
 
     @Override
     @Cacheable(key = "#id", value = "findProductById")
     public ProductDto findById(int id) {
         Optional<Product> product = productRepo.findById(id);
-        if (product.isPresent())
-            return productMapper.map(product.get());
-        else {
+        if (product.isPresent()) {
+            ProductDto productDto = productMapper.toProductDto(product.get());
+            productDto.setCategoryId(product.get().getCategory().getId());
+            return productDto;
+        } else {
             String[] msgParams = {String.valueOf(id)};
             String msg = messageSource.getMessage("exception.recordNotFound.occurred", msgParams,
                     LocaleContextHolder.getLocale());
@@ -56,22 +63,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @CacheEvict(key = "#root.methodName", value = {"findAllProducts", "findProductById"}, allEntries = true)
     public ProductDto insert(ProductDto productDto, MultipartFile imageFile) {
+        Category category = new Category();
+        Product product = new Product();
+        category.setId(productDto.getCategoryId());
         try {
             productDto.setImageName(imageFile.getOriginalFilename());
             productDto.setImageType(imageFile.getContentType());
-            productDto.setImageDate(imageFile.getBytes());
+            productDto.setImageData(imageFile.getBytes());
+            product = productMapper.toProduct(productDto);
+            product.setCategory(category);
         } catch (IOException e) {
             log.info(e.getMessage());
         }
-        productRepo.save(productMapper.unMap(productDto));
+        productRepo.save(product);
         return productDto;
-    }
-
-    @Override
-    @Cacheable(key = "#productId", value = "getProductImage")
-    public ProductDto getProductImage(int productId) {
-        Product product = productRepo.findById(productId).get();
-        return productMapper.map(product);
     }
 
     @Override
@@ -81,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
             if (productRepo.findById(id).isPresent()) {
                 productDto.setImageName(imageFile.getOriginalFilename());
                 productDto.setImageType(imageFile.getContentType());
-                productDto.setImageDate(imageFile.getBytes());
+                productDto.setImageData(imageFile.getBytes());
             } else {
                 String[] msgParams = {String.valueOf(id)};
                 String msg = messageSource.getMessage("exception.recordNotFound.occurred", msgParams,
@@ -91,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (IOException e) {
             log.info(e.getMessage());
         }
-        productRepo.save(productMapper.unMap(productDto));
+        productRepo.save(productMapper.toProduct(productDto));
         return productDto;
     }
 
@@ -110,12 +115,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Cacheable(key = "#keyword", value = "searchForProduct")
-    public List<ProductDto> searchProduct(String keyword) {
-        ProductSpec productSpec = new ProductSpec(keyword);
-        return productRepo.findAll(productSpec).stream()
-                .map(productMapper::map)
-                .collect(Collectors.toList());
+    @Cacheable(key = "#productId", value = "getProductImage")
+    public ProductDto getProductImage(int productId) {
+        Product product = productRepo.findById(productId).get();
+        return productMapper.toProductDto(product);
+    }
+
+    @Override
+    @Cacheable(key = "{#keyword, #pageNum, #size}", value = "searchForProduct")
+    public Page<ProductDto> searchProduct(String keyword, int pageNum, int size) {
+        Pageable pageable = PageRequest.of(pageNum, size);
+        if (keyword == null || keyword.isEmpty() || keyword.isBlank()) {
+            return findAll(pageNum, size);
+        }
+        Specification<Product> products = Specification
+                .where(ProductSpec.searchKeyword(keyword));
+        return productRepo.findAll(products, pageable)
+                .map(productMapper::toProductDto);
+    }
+
+    @Override
+    @Cacheable(key = "{#categoryId, #pageNum, #size}", value = "getProductByCategoryId")
+    public Page<ProductDto> getProductByCategoryId(int categoryId, int pageNum, int size) {
+        Pageable pageable = PageRequest.of(pageNum, size);
+        Specification<Product> products = Specification
+                .where(ProductSpec.getProductByCategoryId(categoryId));
+        return productRepo.findAll(products, pageable)
+                .map(productMapper::toProductDto);
     }
 
 }
