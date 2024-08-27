@@ -13,13 +13,11 @@ public interface ProductService {
 
     ProductDto findById(int id);
 
-    ProductDto insert(ProductDto productDto, MultipartFile imageFile) throws IOException;
+    ProductDto insert(ProductDto productDto, MultipartFile imageFile, String pathType) throws IOException;
 
-    ProductDto update(int id, ProductDto productDto, MultipartFile imageFile) throws IOException;
+    ProductDto update(int id, ProductDto productDto, MultipartFile imageFile, String pathType) throws IOException;
 
     void delete(int id);
-
-    ProductDto getProductImage(int productId);
 
     Page<ProductDto> searchProduct(String keyword, int pageNum, int size);
 

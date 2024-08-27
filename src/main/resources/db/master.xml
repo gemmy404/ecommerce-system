@@ -7,5 +7,6 @@
 
     <include file="db/changelog/2024_8_25_8_48_create_table_categories.sql"/>
     <include file="db/changelog/2024_8_25_8_31_create_table_products.sql"/>
+    <include file="db/changelog/2024_8_27_3_17_alter_table_products.sql"/>
 
 </databaseChangeLog>

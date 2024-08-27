@@ -36,17 +36,17 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "Add new product")
-    public ResponseEntity<?> addProduct(@RequestPart ProductDto product, @RequestPart MultipartFile imageFile)
-            throws IOException {
-        return new ResponseEntity<>(productService.insert(product, imageFile),
+    public ResponseEntity<?> addProduct(@RequestPart ProductDto product, @RequestPart MultipartFile imageFile,
+                                        @RequestPart String pathType) throws IOException {
+        return new ResponseEntity<>(productService.insert(product, imageFile, pathType),
                 HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update product")
     public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestPart ProductDto product,
-                                           @RequestPart MultipartFile imageFile) throws IOException {
-        return new ResponseEntity<>(productService.update(id, product, imageFile),
+                                           @RequestPart MultipartFile imageFile, @RequestPart String pathType) throws IOException {
+        return new ResponseEntity<>(productService.update(id, product, imageFile, pathType),
                 HttpStatus.OK);
     }
 
@@ -55,14 +55,6 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
         productService.delete(id);
         return new ResponseEntity<>("Deleted", HttpStatus.OK);
-    }
-
-    @GetMapping("/{productId}/image")
-    @Operation(summary = "Fetch image to product")
-    public ResponseEntity<?> getProductImage(@PathVariable int productId) {
-        ProductDto productDto = productService.getProductImage(productId);
-        return ResponseEntity.ok().contentType(MediaType.valueOf(productDto.getImageType()))
-                .body(productDto.getImageData());
     }
 
     @GetMapping("/search")

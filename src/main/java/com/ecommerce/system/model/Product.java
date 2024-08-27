@@ -39,12 +39,7 @@ public class Product implements Serializable {
 
     private int stockQuantity;
 
-    private String imageName;
-
-    private String imageType;
-
-    @Column(name = "image_data", columnDefinition = "MEDIUMBLOB")
-    private byte[] imageData;
+    private String imagePath;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
