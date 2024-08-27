@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
     private final MessageSource messageSource;
 
     @Override
-    @Cacheable(key = "{#root.methodName, #pageNum, #size}", value = "findAllProducts")
+    @Cacheable(key = "{#pageNum, #size}", value = "findAllProducts")
     public Page<ProductDto> findAll(int pageNum, int size) {
         Pageable pageable = PageRequest.of(pageNum, size);
         Page<Product> products = productRepo.findAll(pageable);
@@ -63,20 +64,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @CacheEvict(key = "#root.methodName", value = {"findAllProducts", "findProductById"}, allEntries = true)
     public ProductDto insert(ProductDto productDto, MultipartFile imageFile) {
-        Category category = new Category();
-        Product product = new Product();
-        category.setId(productDto.getCategoryId());
+        if (productDto.getId() != null) {
+            String[] msgParams = {productDto.getId().toString()};
+            String msg = messageSource.getMessage("exception.duplicateKey", msgParams,
+                    LocaleContextHolder.getLocale());
+            throw new DuplicateKeyException(msg);
+        }
         try {
             productDto.setImageName(imageFile.getOriginalFilename());
             productDto.setImageType(imageFile.getContentType());
             productDto.setImageData(imageFile.getBytes());
-            product = productMapper.toProduct(productDto);
-            product.setCategory(category);
         } catch (IOException e) {
             log.info(e.getMessage());
         }
-        productRepo.save(product);
-        return productDto;
+        return productMapper.toProductDto(productRepo.save(productMapper.toProduct(productDto)));
     }
 
     @Override
