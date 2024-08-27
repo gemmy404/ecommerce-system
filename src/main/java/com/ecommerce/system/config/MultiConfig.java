@@ -14,9 +14,9 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 @EnableAspectJAutoProxy
 @OpenAPIDefinition(
         info = @Info(
-                title = "Product API",
+                title = "Ecommerce API",
                 version = "v1",
-                description = "CRUD Management System API"
+                description = "Ecommerce System API"
         )
 )
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
@@ -25,6 +25,6 @@ public class MultiConfig {
     @Bean
     public GroupedOpenApi setUpGroupedOpenApi() {
         String packages =  "com.ecommerce.system.controller";
-        return GroupedOpenApi.builder().group("Product API").packagesToScan(packages).build();
+        return GroupedOpenApi.builder().group("Ecommerce API").packagesToScan(packages).build();
     }
 }
