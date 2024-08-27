@@ -33,9 +33,6 @@ public class ProductDto implements Serializable {
 
     private int stockQuantity;
 
-    private String imageName;
+    private String imagePath;
 
-    private String imageType;
-
-    private byte[] imageData;
 }

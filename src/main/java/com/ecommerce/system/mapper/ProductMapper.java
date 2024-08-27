@@ -5,7 +5,7 @@ import com.ecommerce.system.dto.ProductDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ProductMapper {
 
     @Mapping(source = "category.id" , target = "categoryId")
