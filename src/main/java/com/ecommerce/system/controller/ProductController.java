@@ -28,9 +28,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll(pageNum, size));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{product-id}")
     @Operation(summary = "Display one product info")
-    public ResponseEntity<?> getProduct(@PathVariable int id) {
+    public ResponseEntity<?> getProduct(@PathVariable("product-id") int id) {
         return ResponseEntity.ok(productService.findById(id));
     }
 
@@ -42,17 +42,17 @@ public class ProductController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{product-id}")
     @Operation(summary = "Update product")
-    public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestPart ProductDto product,
+    public ResponseEntity<?> updateProduct(@PathVariable("product-id") int id, @RequestPart ProductDto product,
                                            @RequestPart MultipartFile imageFile, @RequestPart String pathType) throws IOException {
         return new ResponseEntity<>(productService.update(id, product, imageFile, pathType),
                 HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{product-id}")
     @Operation(summary = "Delete product")
-    public ResponseEntity<?> deleteProduct(@PathVariable int id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("product-id") int id) {
         productService.delete(id);
         return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
