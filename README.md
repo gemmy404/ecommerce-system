@@ -1,34 +1,55 @@
-# E-Commerce API
+# eCommerce System
 
-This is a Spring Boot-based API designed for an eCommerce platform. It provides functionalities to manage and interact with products on the platform, including viewing product listings, searching, adding new products, and updating or deleting existing products.
+This is a Spring Boot-based eCommerce system that provides APIs for managing products and categories. The system supports operations such as adding, updating, deleting, and searching for products and categories. Additionally, it handles file uploads for product images.
 
 ## Features
 
-- **Home Page for Products**: Displays a list of all available products.
-- **Product Details**: Click on a product to view detailed information, including name, brand, category, description, quantity, and more.
-- **Add New Product**: Allows adding a new product to the catalog.
-- **Update Product**: Modify details of an existing product.
-- **Delete Product**: Remove a product from the catalog.
-- **Search Functionality**: Users can search for products by name, brand, category, or description.
+- **Category Management**
+    - View all categories with pagination.
+    - View details of a specific category by ID.
+    - Search categories by name.
+    - Add new categories.
+    - Update existing categories.
+    - Delete categories.
 
-## Swagger UI Overview
+- **Product Management**
+    - View all products with pagination.
+    - View details of a specific product by ID.
+    - Search products by name, brand, description, or category.
+    - Filter products by category ID.
+    - Add new products with image uploads.
+    - Update existing products with image uploads.
+    - Delete products.
 
-![image](https://github.com/user-attachments/assets/abb9bb67-4921-4d63-a82c-8879eb1a19ec)
+## Technologies Used
 
-## Technologies & Tools
+- **Java 21**
+- **Spring Boot**
+- **Spring Data JPA**
+- **Spring Web**
+- **Lombok**
+- **Swagger/OpenAPI**
+- **MapStruct** (for object mapping)
+- **Mysql**
+- **Maven**
 
-- Spring Boot
-- Spring Data JPA
-- MapStruct
-- Lombok
-- MySQL DB
-- Tomcat Server
-- Maven
-- IntelliJ IDE
+## Project Structure
 
-## Demo Video
-[Watch the project demo](https://drive.google.com/file/d/16rDH7piMzR3PQv0BYdSBReDolWvOfJRk/view)
+- **`controller/`**: Contains REST controllers for handling API requests.
+- **`service/`**: Contains service classes with business logic.
+- **`dto/`**: Data Transfer Objects for transferring data between layers.
+- **`entity/`**: JPA entities representing database tables.
+- **`repository/`**: Spring Data repositories for database access.
+- **`mapper/`**: Contains mappers for converting between entities and DTOs.
 
-## Frontend Repository
+## Access the API:
 
-[Frontend Repository](https://github.com/navinreddy20/ecom-frontend-5.git)
+   The application will start on `http://localhost:8080`. You can access the Swagger UI to explore the API documentation at `http://localhost:8080/swagger-ui.html`.
+
+## API Endpoints
+
+ <div style="display: flex; justify-content: space-around;">
+  <img src="https://github.com/user-attachments/assets/aebb303d-f692-406e-93dc-5b066d267aec" alt="Category API" style="width: 48%;">
+  <img src="https://github.com/user-attachments/assets/8e1963f2-325f-43dd-a5cd-384478624e43" alt="Product API" style="width: 48%;">
+</div>
+
